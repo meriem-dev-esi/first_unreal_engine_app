@@ -1,0 +1,28 @@
+# Unreal Engine .gitignore
+# Binaries and temporary build files
+Binaries/*
+DerivedDataCache/*
+Intermediate/*
+Saved/*
+Build/*
+
+# IDE and Project files
+.vs/
+*.sln
+*.VC.db
+*.opendb
+.idea/
+.vscode/
+
+# Plugins temporary files
+Plugins/*/Binaries/*
+Plugins/*/Intermediate/*
+
+# Crash reports and logs
+Saved/Logs/*
+Saved/Crashes/*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
