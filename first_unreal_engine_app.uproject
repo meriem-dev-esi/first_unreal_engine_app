@@ -2,19 +2,7 @@
 	"FileVersion": 3,
 	"EngineAssociation": "5.7",
 	"Category": "Games",
-	"Description": "3D Melee Arena Brawler fighting game built with Unreal Engine 5.7 and C++",
-	"Modules": [
-		{
-			"Name": "first_unreal_engine_app",
-			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"Engine",
-				"EnhancedInput",
-				"UMG"
-			]
-		}
-	],
+	"Description": "3D Melee Fighting Game prototype in Unreal Engine 5.7",
 	"Plugins": [
 		{
 			"Name": "ModelingToolsEditorMode",
