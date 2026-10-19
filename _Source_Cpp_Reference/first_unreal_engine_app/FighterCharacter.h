@@ -13,6 +13,8 @@ struct FInputActionValue;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChangedSignature, float, CurrentValue, float, MaxValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCombatStateChangedSignature, EFighterCombatState, NewState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLockOnTargetChangedSignature, AActor*, TargetActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUltimateTriggeredSignature, float, CooldownRemaining);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUltimateReadySignature);
 
 UCLASS()
 class FIRST_UNREAL_ENGINE_APP_API AFighterCharacter : public ACharacter
@@ -34,6 +36,9 @@ public:
 	void HeavyAttack();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void SuperAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void StartBlock();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -53,6 +58,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void SetCombatState(EFighterCombatState NewState);
+
+	UFUNCTION(BlueprintPure, Category = "Combat")
+	bool CanUseUltimate() const { return bCanUseUltimate; }
 
 	// Getters
 	UFUNCTION(BlueprintPure, Category = "Combat")
@@ -83,6 +91,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Combat|Events")
 	FOnLockOnTargetChangedSignature OnLockOnTargetChanged;
+
+	UPROPERTY(BlueprintAssignable, Category = "Combat|Events")
+	FOnUltimateTriggeredSignature OnUltimateTriggered;
+
+	UPROPERTY(BlueprintAssignable, Category = "Combat|Events")
+	FOnUltimateReadySignature OnUltimateReady;
 
 protected:
 	virtual void BeginPlay() override;
@@ -117,7 +131,31 @@ protected:
 	float HeavyAttackStaminaCost = 25.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+	float SuperAttackStaminaCost = 40.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
 	float BlockDamageReduction = 0.75f;
+
+	// Super Attack / Ultimate Ability Settings
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate")
+	float UltimateDamage = 150.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate")
+	float UltimateRadius = 800.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate")
+	float UltimateLaunchForce = 1200.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate")
+	float UltimateCooldownSeconds = 6.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Ultimate")
+	bool bCanUseUltimate = true;
+
+	FTimerHandle UltimateCooldownTimer;
+
+	UFUNCTION()
+	void ResetUltimateCooldown();
 
 	// Combat Configuration
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")

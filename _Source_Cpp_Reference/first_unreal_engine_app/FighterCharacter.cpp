@@ -173,6 +173,75 @@ void AFighterCharacter::HeavyAttack()
 	ResetCombo();
 }
 
+void AFighterCharacter::SuperAttack()
+{
+	if (CombatState == EFighterCombatState::Dead || !bCanUseUltimate)
+	{
+		return;
+	}
+
+	if (CurrentStamina < SuperAttackStaminaCost)
+	{
+		return;
+	}
+
+	CurrentStamina = FMath::Clamp(CurrentStamina - SuperAttackStaminaCost, 0.0f, MaxStamina);
+	OnStaminaChanged.Broadcast(CurrentStamina, MaxStamina);
+
+	bCanUseUltimate = false;
+	OnUltimateTriggered.Broadcast(UltimateCooldownSeconds);
+
+	// Start cooldown timer
+	GetWorldTimerManager().SetTimer(UltimateCooldownTimer, this, &AFighterCharacter::ResetUltimateCooldown, UltimateCooldownSeconds, false);
+
+	SetCombatState(EFighterCombatState::Attacking);
+
+	// Perform explosive radial shockwave
+	const FVector BlastOrigin = GetActorLocation();
+
+	TArray<FHitResult> HitResults;
+	FCollisionShape SphereShape = FCollisionShape::MakeSphere(UltimateRadius);
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	GetWorld()->SweepMultiByChannel(HitResults, BlastOrigin, BlastOrigin + FVector(0.0f, 0.0f, 10.0f), FQuat::Identity, ECC_Pawn, SphereShape, Params);
+
+	TArray<AActor*> AffectedActors;
+
+	for (const FHitResult& Hit : HitResults)
+	{
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor && HitActor != this && !AffectedActors.Contains(HitActor))
+		{
+			AffectedActors.Add(HitActor);
+
+			// Deal heavy ultimate damage
+			FDamageEvent DamageEvent;
+			HitActor->TakeDamage(UltimateDamage, DamageEvent, GetController(), this);
+
+			// Launch enemies into the air with radial force
+			if (ACharacter* EnemyChar = Cast<ACharacter>(HitActor))
+			{
+				FVector LaunchDirection = (HitActor->GetActorLocation() - BlastOrigin).GetSafeNormal();
+				LaunchDirection.Z = 0.6f;
+				LaunchDirection.Normalize();
+
+				EnemyChar->LaunchCharacter(LaunchDirection * UltimateLaunchForce + FVector(0.0f, 0.0f, 600.0f), true, true);
+			}
+		}
+	}
+
+	// Reset state after blast
+	GetWorldTimerManager().SetTimer(ComboResetTimer, this, &AFighterCharacter::ResetCombo, 0.8f, false);
+}
+
+void AFighterCharacter::ResetUltimateCooldown()
+{
+	bCanUseUltimate = true;
+	OnUltimateReady.Broadcast();
+}
+
 void AFighterCharacter::StartBlock()
 {
 	if (CombatState == EFighterCombatState::Idle && CurrentStamina > 10.0f)
