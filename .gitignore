@@ -26,3 +26,7 @@ Saved/Crashes/*
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Root external generated files
+/__ExternalActors__/
+/__ExternalObjects__/

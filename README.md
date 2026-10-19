@@ -1,79 +1,106 @@
-# first_unreal_engine_app
+# 🥊🔥 first_unreal_engine_app — 3D Hybrid Brawler & Tactical Shooter
 
-A 3D Third-Person Melee Arena Brawler fighting game prototype created in **Unreal Engine 5.7** using **C++ and Blueprints**.
-
-## 🎮 Game Features
-
-- **Dynamic Melee Combat**: Light attack combo strings and heavy knockdown attacks with stamina costs.
-- **Defensive Tactics**: Active blocking with damage mitigation (75% damage reduction) and guard break on stamina depletion.
-- **Lock-On Target Tracking**: Souls-like target lock-on system that orients player attacks and camera toward the nearest combatant.
-- **Stamina & Health System**: Automatic stamina regeneration during idle periods, stamina penalties for attacks and blocking.
-- **Match & Round System**: Round countdown timer (90s), best-of-three round tracking, timeout decision by HP advantage.
-- **Blueprint Integration**: All C++ combat actions, delegates, and attributes are exposed for Blueprint animation montages, VFX, and UI health bars.
+A high-intensity 3D Arena Combat game developed in **Unreal Engine 5.7** combining **fluid Melee Martial Arts combos**, **Tactical Ballistic Gunplay**, **Wave-Based Enemy Survival**, and **Interactive Environmental Physics**.
 
 ---
 
-## 🏗️ Project Architecture
+## 🌟 Game Highlights & Deep Gameplay Systems
 
-```
-first_unreal_engine_app/
-├── Source/
-│   └── first_unreal_engine_app/
-│       ├── FighterTypes.h            # Combat state enums (Idle, Attacking, Blocking, HitStun, Dead)
-│       ├── FighterCharacter.h/.cpp   # Core combat pawn (Combos, Health, Stamina, Lock-on, Hitboxes)
-│       ├── FighterGameModeBase.h/.cpp# Match controller (Round timer, round wins, match state)
-│       ├── first_unreal_engine_app.Build.cs
-│       └── first_unreal_engine_app.Target.cs
-├── Config/
-│   ├── DefaultEngine.ini
-│   └── DefaultGame.ini
-├── .gitignore                        # Optimized for Unreal Engine (excludes Binaries, Saved, Intermediate)
-├── .gitattributes                   # Git LFS configured for .uasset, .umap, and audio
-└── first_unreal_engine_app.uproject
-```
+### 1. ⚔️ Hybrid Combat Engine (Melee + Ballistic Gunplay)
+- **Melee Combo Strings**: Multi-hit light punch/kick combos with hit-confirm cancels and hitstop impact effects.
+- **Heavy / Charged Knockdown Attacks**: Charge up strikes to break enemy guard and trigger physics ragdoll knockdowns.
+- **Super Ground Slam (Ultimate)**: Radial shockwave (800 unit blast radius) dealing 150 area damage and launching surrounding enemies into the air.
+- **Tactical Firearms**:
+  - **Tactical Pistol**: Fast semi-auto sidearm with rapid reload.
+  - **Assault Rifle**: High-velocity automatic rifle for continuous suppression.
+  - **Grenade Launcher**: Arc-projectile explosive weapon triggering high-yield AoE blast VFX and camera shake.
+
+### 2. 🌊 Wave Survival System (`AWaveSurvivalGameMode`)
+- **Dynamic Wave Progression**: Survive escalating waves (Waves 1 through 10) featuring diverse enemy compositions.
+- **Wave Scaling**: Enemies gain progressively increased health, aggression, and movement speed each round.
+- **Boss Rounds**: Every 5th wave spawns **Annihilator Prime** — an elite boss with 1.5x scale, massive health pool, and ground-pound abilities.
+- **Intermission & Pacing**: Tactical 5-second breathers between waves to scavenge for health and reposition.
+
+### 3. 🎯 Combo Score & Style Ranking System
+- **Combo Multipliers**: Fast consecutive eliminations build your combo multiplier:
+  - 1–4 Kills: **x1.0 Multiplier**
+  - 5–9 Kills: **x1.5 Multiplier**
+  - 10–14 Kills: **x2.0 Multiplier**
+  - 15+ Kills: **x3.0 Multiplier (Berserk Mode)**
+- **Combat Ranks**: Earn ranks based on total combat performance:
+  - **Rank D**: Beginner
+  - **Rank C**: Fighter
+  - **Rank B**: Warrior
+  - **Rank A**: Champion
+  - **Rank S**: Legendary
+  - **Rank SSS**: Godlike
+
+### 4. 🛢️ Interactive Physics Hazards & Arena Verticality
+- **Explosive Barrels (`AExplosiveBarrelActor`)**: Detonate when shot with bullets, struck with heavy punches, or caught in grenade blast. Deals 120 radial damage and applies 2500 force physics impulse to launch debris and ragdolls.
+- **Jump Launch Pads (`BP_JumpPad`)**: Propel your character to high vantage platforms for aerial dive-punches and sniper angles.
+- **Environmental Lava Pits (`BP_Combat_LavaFloor`)**: Knock enemies off arena ledges into hazard zones for instant environmental finishes.
+
+### 5. 💊 Collectible Power-ups & Field Loot (`ACombatPowerupActor`)
+Defeated enemies have a 25% chance to spawn rotating 3D pickups:
+- 🟢 **Health Medkit**: Instantly restores +50 HP.
+- 🔵 **Armor Shield**: Provides damage reduction overshield.
+- 🔴 **Double Damage**: Grants 2x damage output for 15 seconds.
+- ⚡ **Speed Surge**: +50% movement speed for hyper-mobility.
+- ⭐ **Instant Super**: Resets Ultimate Ground Slam cooldown instantly.
 
 ---
 
-## 🚀 Getting Started
+## 🗺️ Playable Levels
 
-### 1. Requirements
-- **Unreal Engine 5.7**
-- **Visual Studio 2022 / Visual Studio Build Tools** (with *Game Development with C++*)
-- **Git & Git LFS**
-
-### 2. Opening the Project
-1. Right-click `first_unreal_engine_app.uproject` and select **Generate Visual Studio project files**.
-2. Open `first_unreal_engine_app.uproject` directly in **Unreal Engine 5.7** or open `first_unreal_engine_app.sln` in Visual Studio and build `Development Editor`.
-3. In the Unreal Editor Content Browser, create a Blueprint derived from `FighterCharacter` (e.g. `BP_FighterCharacter`) and assign your animation montages:
-   - `LightAttackMontages`
-   - `HeavyAttackMontages`
-   - `HitReactMontage`
-   - `DodgeMontage`
-   - `DeathMontage`
+| Level Map | Description | How to Play |
+| :--- | :--- | :--- |
+| **`Lvl_ArenaShooter`** | Full 3D combat arena featuring weapon pickups, AI snipers, platform verticality, and full damage/ragdoll physics. | Default startup map or double-click in `Content/Variant_Shooter/` |
+| **`Lvl_Combat`** | Dedicated martial arts brawling dojo featuring damageable boxes, dummy targets, lava hazards, and combo brawlers. | Double-click in `Content/Variant_Combat/` |
+| **`Lvl_ThirdPerson`** | Open arena sandbox level for custom placement and testing. | Double-click in `Content/ThirdPerson/` |
 
 ---
 
-## 🕹️ Controls (Default Mapping)
+## 🕹️ Controls
 
 | Action | Keyboard / Mouse | Gamepad |
 | :--- | :--- | :--- |
 | **Move** | `W` `A` `S` `D` | Left Stick |
 | **Look / Aim** | Mouse | Right Stick |
-| **Light Attack** | Left Click | Right Bumper (RB) |
-| **Heavy Attack** | Right Click | Right Trigger (RT) |
-| **Block** | Left Shift | Left Bumper (LB) |
-| **Dodge** | Space | `A` / Cross Button |
-| **Lock-On Target** | Middle Mouse / `Tab` | Right Stick Click (R3) |
+| **Fire Weapon / Light Punch** | **Left Mouse Button (LMB)** | Right Trigger (`RT`) |
+| **Aim Down Sights / Heavy Attack** | **Right Mouse Button (RMB)** | Left Trigger (`LT`) |
+| **Super Ground Slam (Ultimate)** | `Q` | `Y` / `Triangle` |
+| **Jump / Launch Pad Bounce** | `Spacebar` | `A` / `Cross` |
+| **Sprint / Dodge Roll** | `Left Shift` | `B` / `Circle` |
+| **Lock-On Target** | `Middle Mouse Button` / `Tab` | Right Stick Click (`R3`) |
+| **Guard / Block** | `F` | Left Bumper (`LB`) |
 
 ---
 
-## 📦 Git Setup & Push
+## 🏗️ Repository Architecture
 
-```bash
-git init
-git add .
-git commit -m "feat: complete 3D melee arena brawler C++ foundation"
-git branch -M main
-git remote add origin https://github.com/meriem-dev-esi/first_unreal_engine_app.git
-git push -u origin main
 ```
+first_unreal_engine_app/
+├── Config/
+│   ├── DefaultEngine.ini             # Maps, CoreRedirects, RHI & Substrate rendering
+│   ├── DefaultGame.ini               # Project identity & description
+│   └── DefaultInput.ini              # Enhanced Input action mappings
+├── Content/
+│   ├── Variant_Shooter/              # Guns (Rifle, Pistol, Launcher), Projectiles, Shooter AI
+│   ├── Variant_Combat/               # Combo animations, Enemy brawlers, Camera shakes, VFX
+│   ├── LevelPrototyping/             # Jump pads, wobble targets, destructibles
+│   └── UI/                           # Dynamic health bars and combat HUD
+├── _Source_Cpp_Reference/
+│   └── first_unreal_engine_app/
+│       ├── FighterTypes.h            # Combat states, Wave states, Powerups, Ranks & Structs
+│       ├── FighterCharacter.h/.cpp   # Melee, Stamina, Health, Ultimate, Target Lock
+│       ├── WaveSurvivalGameMode.h/.cpp# Dynamic wave spawning, scaling, boss rounds, scoring
+│       ├── ExplosiveBarrelActor.h/.cpp# Destructible explosive barrel with physics impulse
+│       └── CombatPowerupActor.h/.cpp # Rotating collectible powerups (Health, Damage, Speed)
+└── first_unreal_engine_app.uproject
+```
+
+---
+
+## 📦 Version Control & Assets
+- Full Git LFS tracking for `.uasset`, `.umap`, and audio files.
+- Main branch: [meriem-dev-esi/first_unreal_engine_app](https://github.com/meriem-dev-esi/first_unreal_engine_app).
