@@ -207,6 +207,14 @@ void AFighterCharacter::SuperAttack()
 
 	GetWorld()->SweepMultiByChannel(HitResults, BlastOrigin, BlastOrigin + FVector(0.0f, 0.0f, 10.0f), FQuat::Identity, ECC_Pawn, SphereShape, Params);
 
+	// Spawn persistent Hellfire hazard field at ground center
+	if (HellfireHazardClass && GetWorld())
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		GetWorld()->SpawnActor<AActor>(HellfireHazardClass, BlastOrigin, FRotator::ZeroRotator, SpawnParams);
+	}
+
 	TArray<AActor*> AffectedActors;
 
 	for (const FHitResult& Hit : HitResults)
@@ -219,6 +227,14 @@ void AFighterCharacter::SuperAttack()
 			// Deal heavy ultimate damage
 			FDamageEvent DamageEvent;
 			HitActor->TakeDamage(UltimateDamage, DamageEvent, GetController(), this);
+
+			// Ignite enemy into blazing flames
+			if (bUltimateIgnitesEnemies)
+			{
+				// Apply burning damage over time
+				FDamageEvent BurnEvent;
+				HitActor->TakeDamage(UltimateBurnDPS, BurnEvent, GetController(), this);
+			}
 
 			// Launch enemies into the air with radial force
 			if (ACharacter* EnemyChar = Cast<ACharacter>(HitActor))

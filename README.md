@@ -14,6 +14,10 @@ A high-intensity 3D Arena Combat game developed in **Unreal Engine 5.7** combini
   - **Tactical Pistol**: Fast semi-auto sidearm with rapid reload.
   - **Assault Rifle**: High-velocity automatic rifle for continuous suppression.
   - **Grenade Launcher**: Arc-projectile explosive weapon triggering high-yield AoE blast VFX and camera shake.
+  - **Cluster Fire Bombs (`AClusterFireProjectile`)**: High-impact mortar shells that detonate on contact and scatter 4 secondary incendiary bomblets in a wide radial starburst.
+  - **Hellfire Ground Slam (`SuperAttack`)**: Radial seismic shockwave unleashing persistent ground fire pools that launch enemies into the air and set them ablaze with burning Damage-Over-Time.
+  - **Burning Status Effect (`UBurningStatusComponent`)**: Targets caught in fire pools or cluster blasts suffer continuous burn ticks (15–30 DPS) and visual fire effects.
+  - **Lingering Fire Hazard Pools (`AFireFieldHazard`)**: Persistent fiery napalm pools (8s duration) that ignite anyone walking through them.
 
 ### 2. 🌊 Wave Survival System (`AWaveSurvivalGameMode`)
 - **Dynamic Wave Progression**: Survive escalating waves (Waves 1 through 10) featuring diverse enemy compositions.

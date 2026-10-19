@@ -149,6 +149,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate")
 	float UltimateCooldownSeconds = 6.0f;
 
+	// Fire & Incendiary Ultimate
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate|Fire")
+	TSubclassOf<AActor> HellfireHazardClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate|Fire")
+	bool bUltimateIgnitesEnemies = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate|Fire")
+	float UltimateBurnDPS = 30.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Ultimate|Fire")
+	float UltimateBurnDuration = 6.0f;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Ultimate")
 	bool bCanUseUltimate = true;
 
