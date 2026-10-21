@@ -107,3 +107,79 @@ struct FCombatScoreData
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Score")
 	ECombatRank CurrentRank = ECombatRank::Rank_D;
 };
+
+UENUM(BlueprintType)
+enum class EWeaponSlot : uint8
+{
+	Primary         UMETA(DisplayName = "Primary (Assault Rifle)"),
+	Secondary       UMETA(DisplayName = "Secondary (Tactical Pistol)"),
+	Heavy           UMETA(DisplayName = "Heavy (Cluster Launcher)"),
+	Melee           UMETA(DisplayName = "Melee (Unarmed Martial Arts)")
+};
+
+UENUM(BlueprintType)
+enum class ERadarTargetType : uint8
+{
+	ShooterEnemy    UMETA(DisplayName = "Shooter Enemy"),
+	BrawlerEnemy    UMETA(DisplayName = "Brawler Enemy"),
+	BossEnemy       UMETA(DisplayName = "Boss Enemy"),
+	Powerup         UMETA(DisplayName = "Combat Powerup"),
+	ExplosiveHazard UMETA(DisplayName = "Explosive Barrel")
+};
+
+UENUM(BlueprintType)
+enum class ECombatParkourState : uint8
+{
+	Grounded        UMETA(DisplayName = "Grounded"),
+	Sliding         UMETA(DisplayName = "Combat Sliding"),
+	DoubleJumping   UMETA(DisplayName = "Double Jumping"),
+	AirDashing      UMETA(DisplayName = "Air Dashing")
+};
+
+USTRUCT(BlueprintType)
+struct FWeaponSlotData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	EWeaponSlot Slot = EWeaponSlot::Primary;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	FString WeaponName = TEXT("Assault Rifle");
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 CurrentAmmo = 30;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 MaxClipSize = 30;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	int32 ReserveAmmo = 120;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	float BaseDamage = 35.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	float RoundsPerMinute = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	bool bIsUnlocked = true;
+};
+
+USTRUCT(BlueprintType)
+struct FRadarPingData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Radar")
+	FVector WorldLocation = FVector::ZeroVector;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Radar")
+	float DistanceToPlayer = 0.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Radar")
+	ERadarTargetType TargetType = ERadarTargetType::ShooterEnemy;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Radar")
+	bool bIsHostile = true;
+};

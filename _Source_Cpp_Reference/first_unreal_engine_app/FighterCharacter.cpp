@@ -7,6 +7,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/DamageEvents.h"
 #include "TimerManager.h"
+#include "TacticalTimeDilationComponent.h"
+#include "CombatInventoryComponent.h"
+#include "CombatParkourMovementComponent.h"
+#include "CombatRadarComponent.h"
 
 AFighterCharacter::AFighterCharacter()
 {
@@ -33,6 +37,12 @@ AFighterCharacter::AFighterCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	// Initialize Tactical Subsystems
+	TimeDilationComp = CreateDefaultSubobject<UTacticalTimeDilationComponent>(TEXT("TimeDilationComp"));
+	InventoryComp = CreateDefaultSubobject<UCombatInventoryComponent>(TEXT("InventoryComp"));
+	ParkourComp = CreateDefaultSubobject<UCombatParkourMovementComponent>(TEXT("ParkourComp"));
+	RadarComp = CreateDefaultSubobject<UCombatRadarComponent>(TEXT("RadarComp"));
 
 	CurrentHealth = MaxHealth;
 	CurrentStamina = MaxStamina;
@@ -526,5 +536,78 @@ void AFighterCharacter::OnMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 	if (CombatState != EFighterCombatState::Dead && CombatState != EFighterCombatState::Blocking)
 	{
 		SetCombatState(EFighterCombatState::Idle);
+	}
+}
+
+void AFighterCharacter::ToggleBulletTime()
+{
+	if (TimeDilationComp)
+	{
+		TimeDilationComp->ToggleBulletTime();
+	}
+}
+
+void AFighterCharacter::SwitchWeapon(EWeaponSlot Slot)
+{
+	if (InventoryComp)
+	{
+		InventoryComp->SwitchToSlot(Slot);
+	}
+}
+
+void AFighterCharacter::NextWeapon()
+{
+	if (InventoryComp)
+	{
+		InventoryComp->NextWeapon();
+	}
+}
+
+void AFighterCharacter::PreviousWeapon()
+{
+	if (InventoryComp)
+	{
+		InventoryComp->PreviousWeapon();
+	}
+}
+
+void AFighterCharacter::ReloadWeapon()
+{
+	if (InventoryComp)
+	{
+		InventoryComp->Reload();
+	}
+}
+
+void AFighterCharacter::DoubleJump()
+{
+	if (ParkourComp)
+	{
+		ParkourComp->TryDoubleJump();
+	}
+}
+
+void AFighterCharacter::AirDash()
+{
+	if (ParkourComp)
+	{
+		FVector InputDir = GetCharacterMovement() ? GetCharacterMovement()->GetLastInputVector() : FVector::ZeroVector;
+		ParkourComp->TryAirDash(InputDir);
+	}
+}
+
+void AFighterCharacter::StartSlide()
+{
+	if (ParkourComp)
+	{
+		ParkourComp->StartSlide();
+	}
+}
+
+void AFighterCharacter::StopSlide()
+{
+	if (ParkourComp)
+	{
+		ParkourComp->StopSlide();
 	}
 }

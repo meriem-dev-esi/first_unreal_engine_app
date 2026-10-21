@@ -10,6 +10,11 @@ class UCameraComponent;
 class UAnimMontage;
 struct FInputActionValue;
 
+class UTacticalTimeDilationComponent;
+class UCombatInventoryComponent;
+class UCombatParkourMovementComponent;
+class UCombatRadarComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAttributeChangedSignature, float, CurrentValue, float, MaxValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCombatStateChangedSignature, EFighterCombatState, NewState);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLockOnTargetChangedSignature, AActor*, TargetActor);
@@ -49,6 +54,34 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void Dodge();
+
+	// Advanced Tactical & Parkour Actions
+	UFUNCTION(BlueprintCallable, Category = "Combat|Tactical")
+	void ToggleBulletTime();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Inventory")
+	void SwitchWeapon(EWeaponSlot Slot);
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Inventory")
+	void NextWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Inventory")
+	void PreviousWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Inventory")
+	void ReloadWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Parkour")
+	void DoubleJump();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Parkour")
+	void AirDash();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Parkour")
+	void StartSlide();
+
+	UFUNCTION(BlueprintCallable, Category = "Combat|Parkour")
+	void StopSlide();
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	bool PerformMeleeHitCheck(float Damage, float Radius = 60.0f, float ForwardOffset = 100.0f);
@@ -107,6 +140,19 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* FollowCamera;
+
+	// Tactical Subsystems
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Components")
+	UTacticalTimeDilationComponent* TimeDilationComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Components")
+	UCombatInventoryComponent* InventoryComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Components")
+	UCombatParkourMovementComponent* ParkourComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat|Components")
+	UCombatRadarComponent* RadarComp;
 
 	// Attributes
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
